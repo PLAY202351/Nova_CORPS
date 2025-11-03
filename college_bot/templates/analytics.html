@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - College Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        <header class="admin-header">
+            <h1>📊 Analytics Dashboard</h1>
+            <div class="header-actions">
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn--secondary btn--sm">← Back to Dashboard</a>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="btn btn--outline btn--sm">Logout</button>
+                </form>
+            </div>
+        </header>
+        
+        <div class="admin-content">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-content">
+                        <h3>{{ total_chats }}</h3>
+                        <p>Total Chats</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3>{{ active_users }}</h3>
+                        <p>Active Users</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <h3>{{ (total_chats / active_users)|round(1) if active_users > 0 else 0 }}</h3>
+                        <p>Avg Chats/User</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Top Questions -->
+            <section class="admin-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>🔥 Top 5 Most Asked Questions</h2>
+                    </div>
+                    <div class="card__body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Question</th>
+                                    <th>Frequency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question in top_questions %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ question.question }}</td>
+                                    <td><span class="status status--info">{{ question.freq }} times</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Top Users -->
+            <section class="admin-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>⭐ Most Active Users</h2>
+                    </div>
+                    <div class="card__body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>College ID</th>
+                                    <th>Total Chats</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in top_users %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.college_id }}</td>
+                                    <td><span class="status status--success">{{ user.chat_count }} chats</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Daily Stats -->
+            <section class="admin-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>📅 Daily Chat Statistics (Last 7 Days)</h2>
+                    </div>
+                    <div class="card__body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Total Chats</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in daily_stats %}
+                                <tr>
+                                    <td>{{ stat.date.strftime('%B %d, %Y') }}</td>
+                                    <td>{{ stat.count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - College Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h1>Student Registration</h1>
+            <p class="subtitle">Create your account</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="college_id" class="form-label">College ID</label>
+                    <input type="text" id="college_id" name="college_id" class="form-control" placeholder="21CS105" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required minlength="6">
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--full-width">Register</button>
+            </form>
+            
+            <p class="footer-text">
+                Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

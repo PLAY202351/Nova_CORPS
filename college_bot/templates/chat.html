@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - College Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-layout">
+        <header class="chat-header">
+            <div class="header-left">
+                <h2>College Assistant Bot</h2>
+                <p class="user-greeting">Welcome, {{ user_name }}!</p>
+            </div>
+            <form method="POST" action="{{ url_for('logout') }}" class="logout-form">
+                <button type="submit" class="btn btn--secondary btn--sm">Logout</button>
+            </form>
+        </header>
+        
+        <div class="chat-container">
+            <div class="chat-sidebar">
+                <h3>Quick Actions</h3>
+                <form method="POST" action="{{ url_for('chat') }}">
+                    <input type="hidden" name="question" value="What's my schedule for today?">
+                    <button type="submit" class="sidebar-btn">📅 My Schedule</button>
+                </form>
+                <form method="POST" action="{{ url_for('chat') }}">
+                    <input type="hidden" name="question" value="Recommend good restaurants nearby">
+                    <button type="submit" class="sidebar-btn">🍽️ Restaurants</button>
+                </form>
+                <form method="POST" action="{{ url_for('chat') }}">
+                    <input type="hidden" name="question" value="Tell me about hostels">
+                    <button type="submit" class="sidebar-btn">🏠 Hostels</button>
+                </form>
+                <form method="POST" action="{{ url_for('chat') }}">
+                    <input type="hidden" name="question" value="Where are the gyms?">
+                    <button type="submit" class="sidebar-btn">💪 Gyms</button>
+                </form>
+            </div>
+            
+            <div class="chat-main">
+                <div class="messages-container">
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <div class="message user-message">
+                                <div class="message-content">
+                                    <strong>You:</strong>
+                                    <p>{{ msg.question }}</p>
+                                </div>
+                                <span class="message-time">{{ msg.created_at.strftime('%I:%M %p') }}</span>
+                            </div>
+                            
+                            <div class="message bot-message">
+                                <div class="message-content">
+                                    <strong>Bot:</strong>
+                                    <p>{{ msg.answer }}</p>
+                                </div>
+                                <span class="message-time">{{ msg.created_at.strftime('%I:%M %p') }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <h3>👋 Hello {{ user_name }}!</h3>
+                            <p>I'm your college assistant. Ask me anything about schedules, restaurants, hostels, or gyms!</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <form method="POST" action="{{ url_for('chat') }}" class="chat-input-form">
+                    <input 
+                        type="text" 
+                        name="question" 
+                        class="form-control chat-input" 
+                        placeholder="Type your question here..." 
+                        required 
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="btn btn--primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
